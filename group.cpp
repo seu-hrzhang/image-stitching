@@ -8,7 +8,7 @@ using namespace std;
 using namespace cv;
 
 Image::Image(Mat src, int group, int index, int key_index, double key_position)
-    : cvSiftOperator(src) {
+        : cvSiftOperator(src) {
     this->group = group;
     this->index = index;
     this->key_index = key_index;
@@ -24,7 +24,7 @@ void Image::resetParam(String name, int nFeatures, int nScales) {
 void Image::get_key_position() {
     if (key_index != -1)
         key_position =
-            cvSiftOperator::kpts[key_index].pt.x / cvSiftOperator::src.cols;
+                cvSiftOperator::kpts[key_index].pt.x / cvSiftOperator::src.cols;
 }
 
 void Sequence::init() {
@@ -103,7 +103,7 @@ void regroup(Sequence raw, vector<Sequence> &groups, double thresh) {
                 break;
             for (int k = 0; k < groups[j].images.size(); ++k) {
                 vector<DMatch> pairs =
-                    cvKnnMatch(raw.images[i], groups[j].images[k]);
+                        cvKnnMatch(raw.images[i], groups[j].images[k]);
 
                 if (pairs.size() >= thresh) {
                     // Train image's key point found, get key point for query
@@ -112,9 +112,9 @@ void regroup(Sequence raw, vector<Sequence> &groups, double thresh) {
                     if (groups[j].images[k].key_index == -1) {
                         // Use median position key point
                         groups[j].images[k].key_index =
-                            (int)(groups[j].images[k].kpts.size() / 2);
+                                (int) (groups[j].images[k].kpts.size() / 2);
                         groups[j].images[k].key_index =
-                            (pairs[pairs.size() / 2].queryIdx);
+                                (pairs[pairs.size() / 2].queryIdx);
                         // groups[j].images[k].key_index = (pairs[0].queryIdx);
                         groups[j].images[k].get_key_position();
 
@@ -123,7 +123,7 @@ void regroup(Sequence raw, vector<Sequence> &groups, double thresh) {
                         // groups[j].images[k].key_position << endl;
                     }
                     raw.images[i].key_index = get_pair_coordinates(
-                        pairs, groups[j].images[k].key_index);
+                            pairs, groups[j].images[k].key_index);
                     raw.images[i].get_key_position();
 
                     // debug
@@ -186,8 +186,8 @@ void cross_examine(vector<Sequence> &groups, int thresh, int nGroups) {
         for (int j = i + 1; j < groups.size(); ++j) {
             // Match to the left
             vector<DMatch> pairs =
-                cvKnnMatch(groups[i].images[groups[i].images.size() - 1],
-                           groups[j].images[0]);
+                    cvKnnMatch(groups[i].images[groups[i].images.size() - 1],
+                               groups[j].images[0]);
             if (pairs.size() >= thresh) {
                 groups[i].images.insert(groups[i].images.end(),
                                         groups[j].images.begin(),
@@ -230,14 +230,14 @@ void bilateralStitch(Sequence seq, Mat &dst, String name) {
     for (int i = 0; i < mid; ++i) {
         pairs = cvKnnMatch(seq.images[i], seq.images[i + 1]);
         homographies.push_back(
-            getHomography(seq.images[i + 1], seq.images[i], pairs));
+                getHomography(seq.images[i + 1], seq.images[i], pairs));
     }
     homographies.push_back(
-        getUnitMatrix(3)); // Middle image to self, unit matrix
+            getUnitMatrix(3)); // Middle image to self, unit matrix
     for (int i = mid + 1; i < seq.images.size(); ++i) {
         pairs = cvKnnMatch(seq.images[i], seq.images[i - 1]);
         homographies.push_back(
-            getHomography(seq.images[i - 1], seq.images[i], pairs));
+                getHomography(seq.images[i - 1], seq.images[i], pairs));
     }
 
     // Get final homography matrix by recursion
@@ -250,8 +250,8 @@ void bilateralStitch(Sequence seq, Mat &dst, String name) {
     // Find size of canvas
     vector<Point2f> corners_l = getCorners(seq.images[0].src, homographies[0]);
     vector<Point2f> corners_r =
-        getCorners(seq.images[seq.images.size() - 1].src,
-                   homographies[seq.images.size() - 1]);
+            getCorners(seq.images[seq.images.size() - 1].src,
+                       homographies[seq.images.size() - 1]);
     double width_l = 0 - MIN(corners_l[0].x, corners_l[2].x);
     double width_r = MAX(corners_r[1].x, corners_r[3].x);
     double height_u = 0 - MIN(MIN(corners_l[0].y, corners_l[1].y),
@@ -274,7 +274,7 @@ void bilateralStitch(Sequence seq, Mat &dst, String name) {
     // Warp images from right to left, copy to canvas
     for (int i = seq.images.size() - 1; i >= 0; --i) {
         vector<Point2f> corners =
-            getCorners(seq.images[i].src, homographies[i]);
+                getCorners(seq.images[i].src, homographies[i]);
         int warp_width = MAX(corners[1].x, corners[3].x) + width_l;
         // int warp_height = MAX(corners[2].y, corners[3].y) + height_u;
         int warp_height = height_d + height_u;
@@ -288,7 +288,7 @@ void bilateralStitch(Sequence seq, Mat &dst, String name) {
         Mat warp;
         warpPerspective(seq.images[i].src, warp,
                         getTranslateMatrix3D(width_l, height_u) *
-                            homographies[i],
+                        homographies[i],
                         Size(warp_width, warp_height));
 
         // debug
@@ -301,9 +301,9 @@ void bilateralStitch(Sequence seq, Mat &dst, String name) {
         // Starting smoothening from the second last image
         if (i < seq.images.size() - 1) {
             vector<Point2f> corners_tl =
-                translateCorners(corners, width_l, height_u);
+                    translateCorners(corners, width_l, height_u);
             vector<Point2f> corners_last_tl =
-                translateCorners(corners_last, width_l, height_u);
+                    translateCorners(corners_last, width_l, height_u);
 
             // debug
             cout << "Executing smoothening" << endl;
