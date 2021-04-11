@@ -11,7 +11,7 @@ using namespace cv;
 
 int main() {
     String path =
-            "/Users/starrynight/Developer/CLionProjects/image_stitching/src";
+        "/Users/starrynight/Developer/CLionProjects/image_stitching/src";
     Sequence seq;
     vector<Sequence> groups;
 
