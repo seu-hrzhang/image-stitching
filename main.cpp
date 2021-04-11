@@ -24,7 +24,7 @@ int main() {
                         "Stitched Image " + to_string(i));
 
     for (int i = 0; i < dst.size(); ++i)
-        imwrite(path + "/Output Image " + to_string(i) + ".JPG", dst[i]);
+        imwrite(path + "/results/Output Image " + to_string(i) + ".JPG", dst[i]);
 
     waitKey();
 
