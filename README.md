@@ -6,5 +6,8 @@ Image_stitching takes in multiple images from differenct scences, automatically 
 ## Usage
 1. Install and configure [OpenCV](https://opencv.org/releases/) on your computer.
 2. Download source code or clone this project.
-3. Put source images to the `src` folder and edit path correspondingly in `main.cpp`.
+3. Put source images to the `./src` folder and edit path correspondingly in `main.cpp`.
 4. Build project.
+
+## Results
+Sample source images are under folder `./src`, in random orders. Output images are under folder `./src/results`.
